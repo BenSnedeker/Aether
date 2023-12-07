@@ -1,6 +1,7 @@
 use std::net::TcpStream;
 
-use logger::{say, nay, hey};
+use better_term::Color;
+use logger::{say, nay, hey, yay};
 use send_it::writer::VarWriter;
 
 fn main() {
@@ -11,6 +12,8 @@ fn main() {
         nay!("Failed to connect to server! Check the ip and port are correct!");
         return;
     };
+    
+    yay!("Connected to {}{}:{}{} successfully!", Color::White, ip, port, Color::BrightGreen);
 
     let mut writer = VarWriter::default();
 

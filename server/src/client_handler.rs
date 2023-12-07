@@ -16,7 +16,7 @@ pub fn handle_client(mut stream: &mut TcpStream, ip: String) {
     // read loop from client
     while let Ok(data) = reader.read_data() {
         for seg in data {
-            say!("Segment from client {}: {}", ip, seg.to_string());
+            say!("Segment from client {}{}{}: {}", Color::White, ip, Color::BrightBlack, seg.to_string());
         }
     }
     hey!("Client with ip {}{}{} has disconnected.", Color::White, ip, Color::BrightYellow);
