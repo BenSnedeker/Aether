@@ -1,11 +1,12 @@
-use std::{net::TcpListener, thread, sync::{Mutex, Arc}};
+use std::{net::TcpListener, thread};
 
 use better_term::Color;
 use logger::{hey, nay, say, yay};
 
-use crate::client_handler::handle_client;
+use crate::{client_handler::handle_client, buffer::SuperBuff};
 
 mod client_handler;
+mod buffer;
 
 fn main() {
     let ip = "0.0.0.0";
@@ -15,14 +16,14 @@ fn main() {
     let listener = match TcpListener::bind(format!("{}:{}", ip, port)) {
         Ok(l) => l,
         Err(e) => {
-            nay!("Failed to bind to address! Maybe try a different port?");
+            nay!("Failed to bind to address! Error: {}", e);
             return;
         }
     };
     yay!("Listening on port {}", port);
 
     // create the change buffer
-    let buffer = Arc::new(Mutex::new(Vec::<String>::new()));
+    let buffer: SuperBuff<String> = SuperBuff::new();
 
     // handle incoming connections
     for stream in listener.incoming() {
@@ -31,9 +32,9 @@ fn main() {
             continue;
         }
 
-        let mut stream = stream.unwrap();
+        let stream = stream.unwrap();
 
-        let buffer_clone = Arc::clone(&buffer);
+        let buffer_clone = buffer.clone();
 
         thread::spawn(move|| {
             // get the ip of the client
