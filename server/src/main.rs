@@ -1,4 +1,4 @@
-use std::{net::TcpListener, thread};
+use std::{net::TcpListener, thread, sync::{Mutex, Arc}};
 
 use better_term::Color;
 use logger::{hey, nay, say, yay};
@@ -21,6 +21,9 @@ fn main() {
     };
     yay!("Listening on port {}", port);
 
+    // create the change buffer
+    let buffer = Arc::new(Mutex::new(Vec::<String>::new()));
+
     // handle incoming connections
     for stream in listener.incoming() {
         if let Err(e) = stream {
@@ -30,6 +33,8 @@ fn main() {
 
         let mut stream = stream.unwrap();
 
+        let buffer_clone = Arc::clone(&buffer);
+
         thread::spawn(move|| {
             // get the ip of the client
             let ip_result  = stream.peer_addr();
@@ -38,7 +43,7 @@ fn main() {
                 return;
             }
             let ip = ip_result.unwrap();
-            handle_client(&mut stream, ip.to_string());
+            handle_client(stream, buffer_clone, ip.to_string());
         });
     }
     hey!("Closing the server!");
