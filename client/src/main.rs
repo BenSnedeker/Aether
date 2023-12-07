@@ -1,6 +1,6 @@
 use std::net::TcpStream;
 
-use logger::{say, nay};
+use logger::{say, nay, hey};
 use send_it::writer::VarWriter;
 
 fn main() {
