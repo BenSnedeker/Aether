@@ -2,7 +2,7 @@
 name = "server"
 version = "0.1.0"
 edition = "2021"
-authors = ["Ben <INSERT EMAIL HERE BEN>", "Eric <skepz.dev@gmail.com>"]
+authors = ["Ben <bensnedeker1@gmail.com>", "Eric <skepz.dev@gmail.com>"]
 description = "The server implementation for aether"
 
 [dependencies]
