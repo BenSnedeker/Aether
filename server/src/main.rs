@@ -1,5 +1,6 @@
 use std::{net::TcpListener, thread};
 
+use better_term::Color;
 use logger::{hey, nay, say, yay};
 
 use crate::client_handler::handle_client;
@@ -9,7 +10,7 @@ mod client_handler;
 fn main() {
     let ip = "0.0.0.0";
     let port = "3333";
-    say!("Starting client on {}:{}", ip, port);
+    say!("Starting server on {}{}:{}", Color::White, ip, port);
 
     let listener = match TcpListener::bind(format!("{}:{}", ip, port)) {
         Ok(l) => l,
