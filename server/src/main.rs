@@ -1,3 +1,8 @@
+use logger::{hey, nay, say, yay};
+
 fn main() {
-    println!("Hello, world!");
+    say!("Hello!");
+    yay!("This works! :D");
+    hey!("This works?");
+    nay!("This works. D:");
 }

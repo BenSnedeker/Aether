@@ -8,3 +8,6 @@ description = "The server implementation for aether"
 [dependencies]
 better_term = "*"
 send-it = "*"
+
+[dependencies.logger]
+path = "../logger"
