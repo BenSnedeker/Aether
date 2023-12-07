@@ -1,7 +1,7 @@
 use std::net::TcpStream;
 
 use better_term::Color;
-use logger::{yay, hey};
+use logger::{yay, hey, say};
 use send_it::{reader::VarReader, writer::VarWriter};
 
 pub fn handle_client(mut stream: &mut TcpStream, ip: String) {
@@ -15,7 +15,9 @@ pub fn handle_client(mut stream: &mut TcpStream, ip: String) {
 
     // read loop from client
     while let Ok(data) = reader.read_data() {
-        // todo: process data
+        for seg in data {
+            say!("Segment from client {}: {}", ip, seg.to_string());
+        }
     }
     hey!("Client with ip {}{}{} has disconnected.", Color::White, ip, Color::BrightYellow);
 }
