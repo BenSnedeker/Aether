@@ -1,0 +1,10 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+authors = ["Ben <INSERT EMAIL HERE BEN>", "Eric <skepz.dev@gmail.com>"]
+description = "The server implementation for aether"
+
+[dependencies]
+better_term = "*"
+send-it = "*"
