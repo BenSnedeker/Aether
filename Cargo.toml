@@ -1,1 +1,1 @@
-workspace = { members = ["client", "logger", "server"] }
+workspace = { members = ["client", "aether-common", "server"] }

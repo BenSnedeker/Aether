@@ -10,4 +10,4 @@ better_term = "*"
 send-it = "*"
 
 [dependencies.logger]
-path = "../logger"
+path = "../aether-common"
