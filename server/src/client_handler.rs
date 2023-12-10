@@ -1,13 +1,13 @@
 use std::{net::TcpStream, thread};
 
 use better_term::Color;
-use aether_common::{yay, hey, say, nay, change::Change};
+use aether_common::{yay, hey, say, nay, change::ChangeType};
 use send_it::{reader::VarReader, writer::VarWriter};
 
 use crate::{buffer::SuperBuff, say_client, yay_client, nay_client, hey_client};
 
 // reads from the client
-pub fn client_reader(mut stream: TcpStream, buffer: SuperBuff<Change>, ip: String) {
+pub fn client_reader(mut stream: TcpStream, buffer: SuperBuff<ChangeType>, ip: String) {
     // create the reader wrapping the TcpStream
     let mut reader = VarReader::new(&mut stream);
     
@@ -30,7 +30,7 @@ pub fn client_writer(stream: TcpStream, ip: String) {
     // TODO: send data to the client about local file changes
 }
 
-pub fn handle_client(stream: TcpStream, buffer: SuperBuff<Change>, ip: String) {
+pub fn handle_client(stream: TcpStream, buffer: SuperBuff<ChangeType>, ip: String) {
     // print successful connection
     yay_client!(&ip, "connected!");
 

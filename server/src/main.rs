@@ -1,7 +1,7 @@
 use std::{net::TcpListener, thread};
 
 use better_term::Color;
-use aether_common::{hey, nay, say, yay, change::Change};
+use aether_common::{hey, nay, say, yay, change::ChangeType};
 
 use crate::{client_handler::handle_client, buffer::SuperBuff};
 
@@ -9,7 +9,7 @@ mod client_handler;
 mod buffer;
 mod log;
 
-fn buffer_handler(mut buffer: SuperBuff<Change>) {
+fn buffer_handler(mut buffer: SuperBuff<ChangeType>) {
     // loop until the program stops
     loop {
         // get the next item in the buffer
@@ -40,7 +40,7 @@ fn main() {
     yay!("Listening on port {}", port);
 
     // create the change buffer
-    let buffer: SuperBuff<Change> = SuperBuff::new();
+    let buffer: SuperBuff<ChangeType> = SuperBuff::new();
 
     // handle the buffer
     let buffer_copy = buffer.clone();

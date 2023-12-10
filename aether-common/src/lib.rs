@@ -49,3 +49,25 @@ pub fn _nay(args: fmt::Arguments) {
 macro_rules! nay {
     ($($arg:tt)*) => { $crate::_nay(format_args!($($arg)*)) }
 }
+
+mod tests {
+    use crate::change;
+
+
+    #[test]
+    fn test_change_serialization() {
+        let mut change_type = change::ChangeType::Insert { new: "Test".to_string() };
+        let mut change = change::ChangeFile {
+            file_path: "".to_string(),
+            change_type,
+            loc: change::Location { line: 10, chr: 30 }
+        };
+
+        let bytes = change.to_le_bytes();
+
+        let deser = change::ChangeFile::from_le_bytes(bytes);
+
+        println!("{}", deser)
+    }
+
+}
