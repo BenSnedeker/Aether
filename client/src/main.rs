@@ -1,7 +1,4 @@
-use std::fs;
-use std::time::Duration;
 use std::{net::TcpStream, thread};
-use std::path::{Path, PathBuf};
 use std::sync::mpsc::channel;
 
 use better_term::Color;
@@ -24,7 +21,7 @@ fn handle_file_changes(){
 
 
 // watches files and sends changes to the server
-fn watcher(mut stream: TcpStream) {
+fn watcher(stream: TcpStream) {
     let mut writer = VarWriter::default();
     let (tx, rx) = channel();
 
@@ -77,7 +74,7 @@ fn main() {
 
     // connect to the server
     say!("Attempting connection to {}:{}", ip, port);
-    let Ok(mut connection) = TcpStream::connect(format!("{}:{}", ip, port)) else {
+    let Ok(connection) = TcpStream::connect(format!("{}:{}", ip, port)) else {
         nay!("Failed to connect to server! Check the ip and port are correct!");
         return;
     };

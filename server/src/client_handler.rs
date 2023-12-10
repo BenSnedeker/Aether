@@ -1,6 +1,5 @@
 use std::{net::TcpStream, thread};
 
-use better_term::Color;
 use aether_common::{yay, hey, say, nay, change::ChangeType};
 use send_it::{reader::VarReader, writer::VarWriter};
 

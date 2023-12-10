@@ -53,7 +53,7 @@ impl<T> SuperBuff<T> {
         
         // remove the value and set has_next if needed
         let removed = buf.remove(0);
-        if (buf.is_empty()) {
+        if buf.is_empty() {
             self.has_next.store(false, std::sync::atomic::Ordering::Relaxed);
         }
 

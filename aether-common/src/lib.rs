@@ -52,21 +52,19 @@ macro_rules! nay {
 }
 
 mod tests {
-    use crate::change;
-
 
     #[test]
     fn test_change_serialization() {
-        let change_type = change::ChangeType::Insert { new: "I just typed this instantaniously!".to_string() };
-        let change = change::ChangeFile {
+        let change_type = crate::change::ChangeType::Insert { new: "I just typed this instantaniously!".to_string() };
+        let change = crate::change::ChangeFile {
             file_path: "cool_file.txt".to_string(),
             change_type,
-            loc: change::Location { line: 10, chr: 30 }
+            loc: crate::change::Location { line: 10, chr: 30 }
         };
 
         let bytes = change.to_segments();
 
-        let deser = change::ChangeFile::from_segments(bytes).expect("Failed to parse from segments!");
+        let deser = crate::change::ChangeFile::from_segments(bytes).expect("Failed to parse from segments!");
 
         println!("{}", deser)
     }
