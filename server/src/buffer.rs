@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex};
 
-use logger::hey;
+use aether_common::hey;
 
 pub struct SuperBuff<T> {
     buffer: Arc<Mutex<Vec<T>>>,

@@ -1,6 +1,8 @@
 use better_term::Color;
 use std::fmt;
 
+pub mod change;
+
 fn raw_log(prefix: String, msg_color: Color, args: fmt::Arguments) {
     println!(
         "{b}[{}{b}] {}{}",

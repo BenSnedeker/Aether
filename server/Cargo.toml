@@ -9,5 +9,5 @@ description = "The server implementation for aether"
 better_term = "*"
 send-it = "*"
 
-[dependencies.logger]
+[dependencies.aether-common]
 path = "../aether-common"
