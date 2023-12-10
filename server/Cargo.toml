@@ -7,7 +7,7 @@ description = "The server implementation for aether"
 
 [dependencies]
 better_term = "*"
-send-it = "*"
+send-it = "0.1.5"
 
 [dependencies.aether-common]
 path = "../aether-common"

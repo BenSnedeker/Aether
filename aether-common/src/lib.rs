@@ -1,4 +1,4 @@
-use better_term::Color;
+use better_term::{Color, flush_styles};
 use std::fmt;
 
 pub mod change;
@@ -11,7 +11,8 @@ fn raw_log(prefix: String, msg_color: Color, args: fmt::Arguments) {
         msg_color,
         args,
         b = Color::BrightBlack
-    )
+    );
+    flush_styles();
 }
 
 pub fn _say(args: fmt::Arguments) {
@@ -56,16 +57,17 @@ mod tests {
 
     #[test]
     fn test_change_serialization() {
-        let mut change_type = change::ChangeType::Insert { new: "Test".to_string() };
-        let mut change = change::ChangeFile {
-            file_path: "".to_string(),
+        let change_type = change::ChangeType::Insert
+        { new: "I just typed this instantaniously!".to_string() };
+        let change = change::ChangeFile {
+            file_path: "cool_file.txt".to_string(),
             change_type,
             loc: change::Location { line: 10, chr: 30 }
         };
 
-        let bytes = change.to_le_bytes();
+        let bytes = change.to_segments();
 
-        let deser = change::ChangeFile::from_le_bytes(bytes);
+        let deser = change::ChangeFile::from_segments(bytes).expect("Failed to parse from segments!");
 
         println!("{}", deser)
     }

@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use send_it::Segment;
+
 pub struct Location {
     pub line: usize,
     pub chr: usize,
@@ -35,54 +37,28 @@ pub struct ChangeFile {
 
 impl ChangeFile {
 
-    pub fn to_le_bytes(&self) -> Vec<u8> {
-        let mut result = Vec::new();
+    pub fn to_segments(&self) -> Vec<Segment> {
+        let change_type_seg = Segment::from(self.change_type.to_le_bytes());
+        let file_path_seg = Segment::from(self.file_path.clone());
+        let loc_seg = Segment::from(self.loc.to_le_bytes());
 
-        // get the variables as bytes
-        let change_type_bytes = self.change_type.to_le_bytes();
-        let file_path_bytes = self.file_path.as_bytes();
-        let loc_bytes = self.loc.to_le_bytes();
-
-        // store their varint lengths to make reading easier
-        let total_length = [
-            change_type_bytes.len() as u8,
-            file_path_bytes.len() as u8,
-            // don't need to write the length of location as it takes up the remaining space
-        ];
-
-        // push everything into a single vector
-        result.extend(total_length);
-        result.extend(change_type_bytes);
-        result.extend(file_path_bytes);
-        result.extend(loc_bytes);
-
-        result
+        vec![change_type_seg, file_path_seg, loc_seg]
     }
 
-    pub fn from_le_bytes(bytes: Vec<u8>) -> Self {
-        let mut byte_slice = bytes.as_slice();
-
-        // Read varint lengths
-        let change_type_len = byte_slice[0] as usize;
-        let file_path_len = byte_slice[1] as usize;
-        byte_slice = &byte_slice[2..];
-
-        // Extract data
-        let change_type_bytes = &byte_slice[0..change_type_len];
-        let file_path_bytes = &byte_slice[change_type_len..change_type_len + file_path_len];
-        let loc_bytes = &byte_slice[change_type_len + file_path_len..];
-
-        // read from bytes
-        let change_type = ChangeType::from_le_bytes(change_type_bytes.to_vec());
-        let file_path = String::from_utf8_lossy(file_path_bytes).to_string();
-        let loc = Location::from_le_bytes(loc_bytes.to_vec());
-
-        // return the data
-        ChangeFile {
-            change_type,
-            file_path,
-            loc,
+    pub fn from_segments(segs: Vec<Segment>) -> Result<ChangeFile, String> {
+        if segs.len() != 3 {
+            return Err("Invalid segment amount while trying to get ChangeFile!".to_string());
         }
+
+        let change_type_seg = segs.first().unwrap();
+        let file_path_seg = segs.get(1).unwrap();
+        let loc_seg = segs.last().unwrap();
+
+        Ok(ChangeFile {
+            change_type: ChangeType::from_le_bytes(change_type_seg.to_raw()),
+            file_path: file_path_seg.to_string(),
+            loc: Location::from_le_bytes(loc_seg.to_raw())
+        })
     }
 
 }
