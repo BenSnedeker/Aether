@@ -7,6 +7,7 @@ use crate::{client_handler::handle_client, buffer::SuperBuff};
 
 mod client_handler;
 mod buffer;
+mod log;
 
 fn buffer_handler(mut buffer: SuperBuff<Change>) {
     // loop until the program stops

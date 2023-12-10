@@ -4,7 +4,7 @@ use better_term::Color;
 use aether_common::{yay, hey, say, nay, change::Change};
 use send_it::{reader::VarReader, writer::VarWriter};
 
-use crate::buffer::SuperBuff;
+use crate::{buffer::SuperBuff, say_client, yay_client, nay_client, hey_client};
 
 // reads from the client
 pub fn client_reader(mut stream: TcpStream, buffer: SuperBuff<Change>, ip: String) {
@@ -17,7 +17,7 @@ pub fn client_reader(mut stream: TcpStream, buffer: SuperBuff<Change>, ip: Strin
 
         // loop through all segments (I reccomend you have a fixed segment structure)
         for seg in data {
-            say!("Segment from client {}{}{}: {}", Color::White, ip, Color::BrightBlack, seg.to_string());
+            say_client!(&ip, "sent segment: {}", seg.to_string());
         }
     }
 }
@@ -32,11 +32,18 @@ pub fn client_writer(stream: TcpStream, ip: String) {
 
 pub fn handle_client(stream: TcpStream, buffer: SuperBuff<Change>, ip: String) {
     // print successful connection
-    yay!("Accepted incoming connection from {}{}{}.", Color::White, ip, Color::BrightGreen);
+    yay_client!(&ip, "connected!");
+
+    say!("Testing new connection logging:");
+
+    say_client!(&ip, "Say client test!");
+    yay_client!(&ip, "Yay client test!");
+    hey_client!(&ip, "Hey client test!");
+    nay_client!(&ip, "Nay client test!");
 
     // clone the stream for the reader thread
     let Ok(stream_copy) = stream.try_clone() else {
-        nay!("Failed to copy stream to send to thread!");
+        nay_client!(&ip, "Failed to copy stream to send to thread!");
         return;
     };
 
@@ -49,5 +56,5 @@ pub fn handle_client(stream: TcpStream, buffer: SuperBuff<Change>, ip: String) {
     // handle writing changes to the client
     client_writer(stream, ip.clone());
 
-    hey!("Client with ip {}{}{} has disconnected.", Color::White, ip, Color::BrightYellow);
+    hey_client!(&ip, "disconnected.");
 }
