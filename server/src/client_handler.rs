@@ -34,13 +34,6 @@ pub fn handle_client(stream: TcpStream, buffer: SuperBuff<ChangeType>, ip: Strin
     // print successful connection
     yay_client!(&ip, "connected!");
 
-    say!("Testing new connection logging:");
-
-    say_client!(&ip, "Say client test!");
-    yay_client!(&ip, "Yay client test!");
-    hey_client!(&ip, "Hey client test!");
-    nay_client!(&ip, "Nay client test!");
-
     // clone the stream for the reader thread
     let Ok(stream_copy) = stream.try_clone() else {
         nay_client!(&ip, "Failed to copy stream to send to thread!");
