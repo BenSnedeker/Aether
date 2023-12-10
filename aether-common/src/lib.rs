@@ -57,8 +57,7 @@ mod tests {
 
     #[test]
     fn test_change_serialization() {
-        let change_type = change::ChangeType::Insert
-        { new: "I just typed this instantaniously!".to_string() };
+        let change_type = change::ChangeType::Insert { new: "I just typed this instantaniously!".to_string() };
         let change = change::ChangeFile {
             file_path: "cool_file.txt".to_string(),
             change_type,
