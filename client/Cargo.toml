@@ -8,6 +8,7 @@ description = "The client implementation for aether"
 [dependencies]
 better_term = "*"
 send-it = "0.1.5"
+notify = "*"
 
 [dependencies.aether-common]
 path = "../aether-common"
