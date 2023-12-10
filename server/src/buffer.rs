@@ -1,15 +1,17 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, atomic::AtomicBool};
 
 use aether_common::hey;
 
 pub struct SuperBuff<T> {
     buffer: Arc<Mutex<Vec<T>>>,
+    has_next: AtomicBool,
 }
 
 impl<T> SuperBuff<T> {
     pub fn new() -> Self {
         Self {
-            buffer: Arc::new(Mutex::new(Vec::new()))
+            buffer: Arc::new(Mutex::new(Vec::new())),
+            has_next: AtomicBool::new(false),
         }
     }
     
@@ -25,12 +27,15 @@ impl<T> SuperBuff<T> {
         // write to the lock
         lock.unwrap().push(value);
         
+        // set has to true
+        self.has_next.store(true, std::sync::atomic::Ordering::Relaxed);
+
         // wrote successfully
         true
     }
     
-    // gets the next value in the buffer if it exists
-    pub fn next(&mut self) -> Option<T> {
+    // gets the next value in the buffer if it exists and removes it
+    pub fn pop(&mut self) -> Option<T> {
         // wait until a lock is obtainable for the buffer
         let lock = self.buffer.lock();
         // handle errors
@@ -42,10 +47,22 @@ impl<T> SuperBuff<T> {
         // get the buffer and return the first value
         let mut buf = lock.unwrap();
         if buf.is_empty() {
+            self.has_next.store(false, std::sync::atomic::Ordering::Relaxed);
             return None;
         }
         
-        Some(buf.remove(0))
+        // remove the value and set has_next if needed
+        let removed = buf.remove(0);
+        if (buf.is_empty()) {
+            self.has_next.store(false, std::sync::atomic::Ordering::Relaxed);
+        }
+
+        Some(removed)
+    }
+
+    // check if the buffer contains data
+    pub fn has_next(&self) -> bool {
+        self.has_next.load(std::sync::atomic::Ordering::Relaxed)
     }
     
     // gets the length of the buffer
@@ -67,7 +84,8 @@ impl<T> SuperBuff<T> {
 impl<T> Clone for SuperBuff<T> {
     fn clone(&self) -> Self {
         Self {
-            buffer: Arc::clone(&self.buffer)
+            buffer: Arc::clone(&self.buffer),
+            has_next: AtomicBool::new(false),
         }
     }
 }

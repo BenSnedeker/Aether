@@ -13,15 +13,16 @@ fn buffer_handler(mut buffer: SuperBuff<Change>) {
     // loop until the program stops
     loop {
         // get the next item in the buffer
-        let Some(next) = buffer.next() else { continue };
+        if !buffer.has_next() { continue; }
+        let Some(next) = buffer.pop() else { continue; };
 
-        // todo: handle the `next` change in the buffer
+        // todo(ben): handle the `next` change in the buffer
         
     }
 }
 
 fn main() {
-    // todo: these could be configurable
+    // todo(ben): these could be configurable
     let ip = "0.0.0.0";
     let port = "3333";
 
@@ -74,5 +75,6 @@ fn main() {
             handle_client(stream, buffer_clone, ip.to_string());
         });
     }
+
     hey!("Closing the server!");
 }
