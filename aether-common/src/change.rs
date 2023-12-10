@@ -1,14 +1,14 @@
 pub struct Location {
     pub line: u32,
-    pub char: u32,
+    pub chr: u32,
 }
 
-// todo: create methods to read / write Location to and from a Vec<u8>
+// todo(eric): create methods to read / write Location to and from a Vec<u8>
 
 pub enum Change {
-    // TODO: These are placeholder Change types. Replace these with better implementations and more types.
-    Insert { chr: char, loc: Location },
-    Delete { chr: char, loc: Location },
+    Insert { loc: Location, str: String },
+    Delete { loc: Location, length: usize },
+    Overwrite { loc: Location, length: usize, str: String },
 }
 
-// todo: create methods to read / write Change to and from a Vec<u8>
+// todo(eric): create methods to read / write Change to and from a Vec<u8>
